@@ -27,7 +27,7 @@
         <ImageView
             android:id="@+id/image_post_card"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/size_60"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="2dp"
             android:layout_marginTop="2dp"
@@ -74,7 +74,7 @@
             app:civ_border_color="@color/colorPrimary"
             app:civ_border_width="1dp"
             android:contentDescription="@string/author"
-            android:src="@drawable/ic_account"
+            android:src="@drawable/user"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/desc_post_card" />
 
@@ -90,42 +90,41 @@
                 android:layout_width="@dimen/size_15"
                 android:layout_height="@dimen/size_15"
                 android:contentDescription="@string/upvotes"
-                android:src="@drawable/like" />
+                android:scaleType="fitCenter"
+                android:padding="@dimen/size_2"
+                android:src="@drawable/up" />
 
             <TextView
                 android:id="@+id/post_card_upvotes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="@dimen/size_2"
                 android:layout_gravity="center"
-                android:hint="@string/upvotes"
                 android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="@dimen/size_15"
                 android:layout_height="@dimen/size_15"
+                android:padding="@dimen/size_2"
+                android:scaleType="fitCenter"
                 android:contentDescription="@string/downvotes"
-                android:src="@drawable/dislike" />
+                android:src="@drawable/down" />
 
             <TextView
                 android:id="@+id/post_card_downvotes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:hint="@string/downvotes"
+                android:padding="@dimen/size_2"
                 android:textSize="16sp" />
 
-<!--            <ImageView-->
-<!--                android:layout_width="@dimen/size_15"-->
-<!--                android:layout_height="@dimen/size_15"-->
-<!--                android:contentDescription="@string/comments"-->
-<!--                android:src="@drawable/ic_account" />-->
-
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:hint="@string/comments"-->
-<!--                android:textSize="16sp" />-->
+            <ImageView
+                android:layout_width="@dimen/size_15"
+                android:layout_height="@dimen/size_15"
+                android:padding="@dimen/size_2"
+                android:contentDescription="@string/comments"
+                android:src="@drawable/comment" />
         </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

@@ -1,16 +1,16 @@
 package com.jedischool.skinder.data.repository
 
-import com.jedischool.skinder.data.api.ApiHelper
+import com.jedischool.skinder.data.api.ApiService
 import okhttp3.MultipartBody
 
-class MainRepository(private val apiHelper: ApiHelper) {
-    suspend fun getToken(t:Map<String,String>) = apiHelper.getToken(t)
-    suspend fun refreshToken() = apiHelper.refreshToken()
-    suspend fun getPosts() = apiHelper.getPosts()
-    suspend fun getMyPosts() = apiHelper.getMyPosts()
-    suspend fun getTrending() = apiHelper.getTrending()
-    suspend fun getLeaderboard() = apiHelper.getLeaderboard()
-    suspend fun getProfile() = apiHelper.getProfile()
-    suspend fun addPostImage(img: MultipartBody.Part, t: MultipartBody.Part, c: MultipartBody.Part) = apiHelper.addPostImage(img,t,c)
-    suspend fun addPost(t: MultipartBody.Part, c: MultipartBody.Part) = apiHelper.addPost(t,c)
+class MainRepository(private val apiService: ApiService) {
+    suspend fun getToken(t:Map<String,String>) = apiService.getToken(t)
+    suspend fun refreshToken() = apiService.refreshToken()
+    suspend fun getPosts() = apiService.getPosts()
+    suspend fun getMyPosts() = apiService.getMyPosts()
+    suspend fun getTrending() = apiService.getTrending()
+    suspend fun getLeaderboard() = apiService.getLeaderboard()
+    suspend fun getProfile() = apiService.getProfile()
+    suspend fun addPostImage(img: MultipartBody.Part, t: MultipartBody.Part, c: MultipartBody.Part) = apiService.addPostImage(img,t,c)
+    suspend fun addPost(t: MultipartBody.Part, c: MultipartBody.Part) = apiService.addPost(t,c)
 }

@@ -14,10 +14,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.jedischool.skinder.R
-import com.jedischool.skinder.data.api.ApiHelper
 import com.jedischool.skinder.data.api.RetrofitBuilder
 import com.jedischool.skinder.data.model.AuthResponse
 import com.jedischool.skinder.ui.base.ViewModelFactory
@@ -45,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(
                 this,
-                ViewModelFactory(ApiHelper(RetrofitBuilder.apiService))
+                ViewModelFactory(RetrofitBuilder.apiService)
         ).get(MainViewModel::class.java)
 
         sharedPreferences = getSharedPreferences("AUTH", Context.MODE_PRIVATE)
@@ -72,6 +70,8 @@ class LoginActivity : AppCompatActivity() {
                 when (resource.status) {
                     Status.SUCCESS -> {
                         TOKEN = resource.data?.accessToken
+                        editor.putString("token", resource.data?.accessToken)
+                        editor.commit()
                     }
                     Status.ERROR -> {
                         Toast.makeText(this, resource.message, Toast.LENGTH_SHORT).show()
@@ -137,12 +137,9 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setUser(response: AuthResponse) {
         editor.putString("token", response.accessToken)
-        editor.putString("username", response.name)
-        editor.putString("profile_image", response.image_link)
-        editor.putInt("points", response.points)
         editor.commit()
         TOKEN = response.accessToken
-        Log.d("TOKEN",response.accessToken)
+        Log.d("TOKEN NEW",response.accessToken)
         Toast.makeText(this, response.name, Toast.LENGTH_SHORT).show()
     }
 }

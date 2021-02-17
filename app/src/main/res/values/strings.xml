@@ -29,4 +29,5 @@
     <string name="author">Author</string>
     <string name="sign_in">Sign In</string>
     <string name="capture">Capture</string>
+    <string name="post_detail">Post Detail</string>
 </resources>

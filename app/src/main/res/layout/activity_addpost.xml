@@ -14,7 +14,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/side_nav_bar"
         android:contentDescription="@string/post_image" />
 
     <EditText
@@ -49,9 +48,10 @@
         android:id="@+id/upload_add_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="65dp"
+        android:layout_marginStart="@dimen/size_20"
         android:layout_marginTop="44dp"
-        android:drawableStart="@drawable/ic_upload"
+        android:drawableStart="@drawable/gallery"
+        android:drawablePadding="@dimen/size_4"
         android:padding="@dimen/size_4"
         android:text="@string/upload_image"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +62,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
-        android:drawableStart="@drawable/ic_menu_camera"
+        android:drawableStart="@drawable/camera"
+        android:drawablePadding="@dimen/size_4"
         android:padding="@dimen/size_4"
         android:text="@string/capture"
         app:layout_constraintStart_toEndOf="@+id/upload_add_post"

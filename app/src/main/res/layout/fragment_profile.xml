@@ -6,14 +6,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.profile.ProfileFragment">
+    tools:context=".ui.fragments.profile.ProfileFragment">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginTop="36dp"
-        android:src="@drawable/ic_account"
+        android:src="@drawable/user"
         app:civ_border_color="@color/white"
         app:civ_border_width="4dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,6 +49,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/username"
                 android:textAlignment="center"
+                android:textSize="20sp"
                 android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -62,6 +63,7 @@
                 android:textColor="@color/black"
                 android:hint="@string/user_email"
                 android:textAlignment="center"
+                android:textSize="20sp"
                 app:layout_constraintTop_toBottomOf="@+id/profile_username"
                 tools:layout_editor_absoluteX="16dp" />
 
@@ -69,48 +71,49 @@
                 android:id="@+id/profile_user_points"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="44dp"
+                android:layout_marginTop="60dp"
                 android:hint="@string/user_points"
-                android:textColor="@color/black"
                 android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="@+id/profile_username"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/profile_username"
                 app:layout_constraintTop_toBottomOf="@+id/profile_username" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_badge1"
+            <ImageView
+                android:id="@+id/profile_badge_4"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="@dimen/size_16"
                 android:src="@drawable/badge4"
-                app:layout_constraintEnd_toStartOf="@+id/profile_badge3"
-                app:layout_constraintStart_toEndOf="@+id/profile_badge2"
-                app:layout_constraintTop_toBottomOf="@+id/profile_badge2" />
+                app:layout_constraintEnd_toStartOf="@+id/profile_badge_2"
+                app:layout_constraintStart_toEndOf="@+id/profile_badge_1"
+                app:layout_constraintTop_toBottomOf="@+id/profile_badge_1" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_badge2"
+            <ImageView
+                android:id="@+id/profile_badge_1"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="@dimen/size_30"
                 android:layout_marginEnd="12dp"
                 android:src="@drawable/badge1"
-                app:layout_constraintEnd_toStartOf="@+id/profile_badge3"
+                app:tint="@color/colorPrimary"
+                app:layout_constraintEnd_toStartOf="@+id/profile_badge_2"
                 app:layout_constraintTop_toBottomOf="@+id/profile_user_points" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_badge3"
+            <ImageView
+                android:id="@+id/profile_badge_2"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="@dimen/size_30"
-                android:layout_marginEnd="@dimen/size_6"
-                app:civ_border_width="4dp"
-                android:src="@drawable/badhe2"
-                app:layout_constraintEnd_toStartOf="@+id/profile_badge4"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/badge2"
+                app:layout_constraintEnd_toStartOf="@+id/profile_badge_3"
                 app:layout_constraintTop_toBottomOf="@+id/profile_user_points" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_badge4"
+            <ImageView
+                android:id="@+id/profile_badge_3"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="@dimen/size_30"
@@ -119,14 +122,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/profile_user_points" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_badge5"
+            <ImageView
+                android:id="@+id/profile_badge_5"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:src="@drawable/badge5"
-                app:layout_constraintBottom_toBottomOf="@+id/profile_badge1"
-                app:layout_constraintEnd_toStartOf="@+id/profile_badge4"
-                app:layout_constraintStart_toEndOf="@+id/profile_badge3" />
+                app:layout_constraintBottom_toBottomOf="@+id/profile_badge_4"
+                app:layout_constraintEnd_toStartOf="@+id/profile_badge_3"
+                app:layout_constraintStart_toEndOf="@+id/profile_badge_2" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

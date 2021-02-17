@@ -11,29 +11,24 @@ import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.jedischool.skinder.R
-import com.jedischool.skinder.data.api.ApiHelper
 import com.jedischool.skinder.data.api.RetrofitBuilder
-import com.jedischool.skinder.data.model.UserLeaderboard
 import com.jedischool.skinder.ui.base.ViewModelFactory
 import com.jedischool.skinder.ui.viewmodel.MainViewModel
 import com.jedischool.skinder.utils.Status
-import okhttp3.MediaType
+import com.royrodriguez.transitionbutton.TransitionButton
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
@@ -43,6 +38,7 @@ class AddPostActivity : AppCompatActivity() {
     private val FINAL_CHOOSE_PHOTO = 2
     private var picture: ImageView? = null
     private var imageUri: Uri? = null
+    private lateinit var outputImage: File
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +46,7 @@ class AddPostActivity : AppCompatActivity() {
 
         val viewModel = ViewModelProvider(
                 this,
-                ViewModelFactory(ApiHelper(RetrofitBuilder.apiService))
+                ViewModelFactory(RetrofitBuilder.apiService)
         ).get(MainViewModel::class.java)
 
         picture = findViewById(R.id.image_add_post)
@@ -58,10 +54,10 @@ class AddPostActivity : AppCompatActivity() {
         val postDesc: EditText = findViewById(R.id.desc_add_post)
         val uploadImage: Button = findViewById(R.id.upload_add_post)
         val cameraButton: Button = findViewById(R.id.camera_add_post)
-        val addButton: Button = findViewById(R.id.add_post_button)
+        val addButton: TransitionButton = findViewById(R.id.add_post_button)
 
         cameraButton.setOnClickListener{
-            val outputImage = File(externalCacheDir, "output_image.jpg")
+            outputImage = File(externalCacheDir, "output_image.jpg")
             if(outputImage.exists()) {
                 outputImage.delete()
             }
@@ -78,7 +74,7 @@ class AddPostActivity : AppCompatActivity() {
         }
 
         uploadImage.setOnClickListener {
-            val checkSelfPermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            val checkSelfPermission = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
             if (checkSelfPermission != PackageManager.PERMISSION_GRANTED){
                     ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
                 }
@@ -88,9 +84,10 @@ class AddPostActivity : AppCompatActivity() {
         }
 
         addButton.setOnClickListener {
-            val outputImage = File(externalCacheDir, "output_image.jpg")
+            addButton.startAnimation()
             if(postTitle.text.toString()=="" || postDesc.text.toString()==""){
                 Toast.makeText(this, "Please enter all fields!", Toast.LENGTH_LONG).show()
+                addButton.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE) { }
             }
             else if(outputImage.exists()) {
                 val img = MultipartBody.Part.createFormData("myFile",outputImage.name,
@@ -102,10 +99,15 @@ class AddPostActivity : AppCompatActivity() {
                         when (resource.status) {
                             Status.SUCCESS -> {
                                 Toast.makeText(this, resource.data?.Message, Toast.LENGTH_SHORT).show()
+                                addButton.stopAnimation(TransitionButton.StopAnimationStyle.EXPAND) {
+                                    val intent = Intent(this,MainActivity::class.java)
+                                    startActivity(intent)
+                                }
                             }
                             Status.ERROR -> {
                                 Toast.makeText(this, resource.message, Toast.LENGTH_SHORT).show()
                                 Log.e("ERR", resource.message.toString())
+                                addButton.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE) {  }
                                 if(resource.message.toString().contains("401",ignoreCase = true)) {
 
                                 }
@@ -125,6 +127,10 @@ class AddPostActivity : AppCompatActivity() {
                         when (resource.status) {
                                 Status.SUCCESS -> {
                                     Toast.makeText(this, resource.data?.Message, Toast.LENGTH_SHORT).show()
+                                    addButton.stopAnimation(TransitionButton.StopAnimationStyle.EXPAND) {
+                                        val intent = Intent(this, MainActivity::class.java)
+                                        startActivity(intent)
+                                    }
                                 }
                                 Status.ERROR -> {
                                     Toast.makeText(this, resource.message, Toast.LENGTH_SHORT).show()
@@ -143,7 +149,7 @@ class AddPostActivity : AppCompatActivity() {
     }
 
     private fun openAlbum(){
-        val intent = Intent("android.intent.action.GET_CONTENT")
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         intent.type = "image/*"
         startActivityForResult(intent, FINAL_CHOOSE_PHOTO)
     }
@@ -152,11 +158,11 @@ class AddPostActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when(requestCode){
             1 ->
-            if (grantResults.isNotEmpty() && grantResults.get(0) ==PackageManager.PERMISSION_GRANTED){
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 openAlbum()
             }
             else {
-                Toast.makeText(this, "You deied the permission", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "You denied the permission", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -166,7 +172,7 @@ class AddPostActivity : AppCompatActivity() {
         when(requestCode){
             FINAL_TAKE_PHOTO ->
                 if (resultCode == Activity.RESULT_OK) {
-                    val bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri!!))
+                    val bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri!!))
                     picture!!.setImageBitmap(bitmap)
                 }
             FINAL_CHOOSE_PHOTO ->
@@ -183,8 +189,8 @@ class AddPostActivity : AppCompatActivity() {
             val docId = DocumentsContract.getDocumentId(uri)
             if ("com.android.providers.media.documents" == uri?.authority){
                 val id = docId.split(":")[1]
-                val selsetion = MediaStore.Images.Media._ID + "=" + id
-                imagePath = imagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selsetion)
+                val selection = MediaStore.Images.Media._ID + "=" + id
+                imagePath = imagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection)
             }
             else if ("com.android.providers.downloads.documents" == uri?.authority){
                 val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(docId))
@@ -214,6 +220,7 @@ class AddPostActivity : AppCompatActivity() {
 
     private fun displayImage(imagePath: String?){
         if (imagePath != null) {
+            outputImage = File(imagePath)
             val bitmap = BitmapFactory.decodeFile(imagePath)
             picture?.setImageBitmap(bitmap)
         }

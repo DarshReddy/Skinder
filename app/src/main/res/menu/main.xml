@@ -4,14 +4,14 @@
     <item
         android:id="@+id/action_add_post"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_add"
+        android:icon="@drawable/add"
         android:title="@string/add_post"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_logout"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_logout"
+        android:icon="@drawable/exit"
         android:title="@string/logout"
         app:showAsAction="ifRoom"/>
 </menu>
