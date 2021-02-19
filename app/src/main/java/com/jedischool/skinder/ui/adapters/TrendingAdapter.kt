@@ -1,4 +1,4 @@
-package com.jedischool.skinder.ui.fragments.home
+package com.jedischool.skinder.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -11,16 +11,17 @@ import com.bumptech.glide.Glide
 import com.jedischool.skinder.R
 import com.jedischool.skinder.data.model.PostDetail
 
-class PostAdapter(private val posts: ArrayList<PostDetail>, private val context: Context, private val postClicked: PostClicked)
-    : RecyclerView.Adapter<PostAdapter.DataViewHolder>()
+class TrendingAdapter(private val posts: ArrayList<PostDetail>, private val context: Context, private val postClicked: PostClicked)
+    : RecyclerView.Adapter<TrendingAdapter.DataViewHolder>()
 {
 
     interface PostClicked {
         fun onPostClicked(pos: Int)
+        fun votePost(v: String, id: String)
     }
 
     class DataViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        fun bind(post : PostDetail)
+        fun bind(post: PostDetail)
         {
             itemView.apply {
                 val postTitle : TextView = findViewById(R.id.name_post_card)
@@ -29,18 +30,27 @@ class PostAdapter(private val posts: ArrayList<PostDetail>, private val context:
                 val postAuthor : ImageView = findViewById(R.id.author_post_card)
                 val postUpVotes : TextView = findViewById(R.id.post_card_upvotes)
                 val postDownVotes : TextView = findViewById(R.id.post_card_downvotes)
+                val upVote: ImageView = findViewById(R.id.upvote_icon)
+                val downVote: ImageView = findViewById(R.id.downvote_icon)
+                val comment: ImageView = findViewById(R.id.comment_icon)
+
+                upVote.setImageResource(R.drawable.trending)
+                downVote.visibility = View.GONE
+                comment.visibility = View.GONE
+                postDownVotes.visibility = View.GONE
+
+
                 postTitle.text = post.title
                 Glide.with(itemView).load(post.image_link).into(postImage)
                 postEmail.text = post.caption
                 Glide.with(itemView).load(post.user_image).into(postAuthor)
-                postUpVotes.text = post.upvotes
-                postDownVotes.text = post.downvotes
+                postUpVotes.text = "Engagement: " + post.total
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataViewHolder =
-        DataViewHolder(LayoutInflater.from(context).inflate(R.layout.post_card_item, parent, false))
+            DataViewHolder(LayoutInflater.from(context).inflate(R.layout.post_card_item, parent, false))
 
     override fun getItemCount(): Int = posts.size
 

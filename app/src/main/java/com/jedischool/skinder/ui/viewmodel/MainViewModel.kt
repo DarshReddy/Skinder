@@ -46,6 +46,15 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
         }
     }
 
+    fun getPopular() : LiveData<Resource<List<PostDetail>>> = liveData {
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = mainRepository.getPopular()))
+        } catch (e:Exception) {
+            emit(Resource.error(data = null, message = e.message ?: "error occurred!"))
+        }
+    }
+
     fun getMyPosts() : LiveData<Resource<List<PostDetail>>> = liveData {
         emit(Resource.loading(data = null))
         try {
@@ -74,7 +83,7 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
     }
 
     fun addPostImage(img:MultipartBody.Part,t:MultipartBody.Part,c: MultipartBody.Part)
-            : LiveData<Resource<AddPostResponse>> = liveData {
+            : LiveData<Resource<MessageResponse>> = liveData {
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = mainRepository.addPostImage(img,t,c)))
@@ -84,10 +93,40 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
     }
 
     fun addPost(t:MultipartBody.Part,c: MultipartBody.Part)
-            : LiveData<Resource<AddPostResponse>> = liveData {
+            : LiveData<Resource<MessageResponse>> = liveData {
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = mainRepository.addPost(t,c)))
+        } catch (e:Exception) {
+            emit(Resource.error(data = null, message = e.message ?: "error occurred!"))
+        }
+    }
+
+    fun votePost(m:Map<String, String>)
+            : LiveData<Resource<MessageResponse>> = liveData {
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = mainRepository.votePost(m)))
+        } catch (e:Exception) {
+            emit(Resource.error(data = null, message = e.message ?: "error occurred!"))
+        }
+    }
+
+    fun voteComment(m:Map<String, String>)
+            : LiveData<Resource<MessageResponse>> = liveData {
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = mainRepository.voteComment(m)))
+        } catch (e:Exception) {
+            emit(Resource.error(data = null, message = e.message ?: "error occurred!"))
+        }
+    }
+
+    fun getPostComments(id:String)
+            : LiveData<Resource<List<CommentDetail>>> = liveData {
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = mainRepository.getPostComments(id)))
         } catch (e:Exception) {
             emit(Resource.error(data = null, message = e.message ?: "error occurred!"))
         }

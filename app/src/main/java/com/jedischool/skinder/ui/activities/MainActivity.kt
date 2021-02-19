@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.jedischool.skinder.R
 import com.jedischool.skinder.data.api.RetrofitBuilder
+import com.jedischool.skinder.data.model.PostDetail
 import com.jedischool.skinder.data.model.UserDetailResponse
 import com.jedischool.skinder.ui.base.ViewModelFactory
 import com.jedischool.skinder.ui.viewmodel.MainViewModel
@@ -75,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.nav_home, R.id.nav_profile, R.id.nav_posts, R.id.nav_leaderboard, R.id.nav_trending
+            R.id.nav_home, R.id.nav_profile, R.id.nav_posts, R.id.nav_leaderboard, R.id.nav_trending, R.id.nav_popular
         ), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
@@ -108,5 +109,9 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    fun onPostClicked() {
+
     }
 }

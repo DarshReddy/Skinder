@@ -8,7 +8,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitBuilder {
-    private const val BASE_URL="http://ec2-52-206-109-241.compute-1.amazonaws.com:3000/team2practo/"
+    private const val BASE_URL="http://ec2-52-206-109-241.compute-1.amazonaws.com/team2practo/"
 
     private val client = OkHttpClient.Builder()
         .addInterceptor(Interceptor { chain -> intercept(chain) })

@@ -1,5 +1,6 @@
 package com.jedischool.skinder.ui.fragments.profile
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.jedischool.skinder.R
 import com.jedischool.skinder.data.api.RetrofitBuilder
 import com.jedischool.skinder.data.model.UserDetailResponse
+import com.jedischool.skinder.ui.activities.LoginActivity
 import com.jedischool.skinder.ui.base.ViewModelFactory
 import com.jedischool.skinder.ui.viewmodel.MainViewModel
 import com.jedischool.skinder.utils.Status
@@ -66,7 +68,8 @@ class ProfileFragment : Fragment() {
                         Toast.makeText(context, resource.message, Toast.LENGTH_SHORT).show()
                         Log.e("ERR", resource.message.toString())
                         if(resource.message.toString().contains("401",ignoreCase = true)) {
-
+                            val intent = Intent(context, LoginActivity::class.java)
+                            startActivity(intent)
                         }
                     }
                     Status.LOADING -> {

@@ -1,4 +1,4 @@
-package com.jedischool.skinder.ui.fragments.leaderboard
+package com.jedischool.skinder.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -16,19 +16,21 @@ class UserAdapter(private val users:ArrayList<UserLeaderboard>, private val cont
 {
     class DataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(user: UserLeaderboard) {
-            val userImage: ImageView = itemView.findViewById(R.id.image_user_card)
-            val userName: TextView = itemView.findViewById(R.id.name_user_card)
-            val pointsUser: TextView = itemView.findViewById(R.id.points_user_card)
-            val badge:ImageView = itemView.findViewById(R.id.badge_user_card)
-            Glide.with(itemView).load(user.image_link).into(userImage)
-            userName.text = user.name
-            pointsUser.text = "Points: " + user.points
+            itemView.apply {
+                val userImage: ImageView = findViewById(R.id.image_user_card)
+                val userName: TextView = findViewById(R.id.name_user_card)
+                val pointsUser: TextView = findViewById(R.id.points_user_card)
+                val badge:ImageView = findViewById(R.id.badge_user_card)
+                Glide.with(this).load(user.image_link).into(userImage)
+                userName.text = user.name
+                pointsUser.text = "Points: " + user.points
 
-            when {
-                user.points>40 -> badge.setImageResource(R.drawable.badge5)
-                user.points>30 -> badge.setImageResource(R.drawable.badge4)
-                user.points>20 -> badge.setImageResource(R.drawable.badge3)
-                user.points>10 -> badge.setImageResource(R.drawable.badge2)
+                when {
+                    user.points>40 -> badge.setImageResource(R.drawable.badge5)
+                    user.points>30 -> badge.setImageResource(R.drawable.badge4)
+                    user.points>20 -> badge.setImageResource(R.drawable.badge3)
+                    user.points>10 -> badge.setImageResource(R.drawable.badge2)
+                }
             }
         }
     }

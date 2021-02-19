@@ -18,6 +18,7 @@ import com.jedischool.skinder.data.model.PostDetail
 import com.jedischool.skinder.databinding.FragmentHomeBinding
 import com.jedischool.skinder.ui.activities.LoginActivity
 import com.jedischool.skinder.ui.activities.PostDetailActivity
+import com.jedischool.skinder.ui.adapters.PostAdapter
 import com.jedischool.skinder.ui.base.ViewModelFactory
 import com.jedischool.skinder.ui.viewmodel.MainViewModel
 import com.jedischool.skinder.utils.Status
@@ -84,10 +85,45 @@ class HomeFragment : Fragment(), PostAdapter.PostClicked {
 
     override fun onPostClicked(pos: Int) {
         val intent = Intent(context, PostDetailActivity::class.java)
+        intent.putExtra("id",posts[pos].post_id)
         intent.putExtra("title",posts[pos].title)
         intent.putExtra("image",posts[pos].image_link)
         intent.putExtra("caption",posts[pos].caption)
         intent.putExtra("author",posts[pos].user_image)
+        intent.putExtra("up",posts[pos].upvotes)
+        intent.putExtra("down",posts[pos].downvotes)
+        intent.putExtra("uord",posts[pos].upordown)
         startActivity(intent)
+    }
+
+    override fun votePost(v: String, id: String) {
+        val viewModel =ViewModelProvider(
+                this,
+                ViewModelFactory(RetrofitBuilder.apiService)
+        ).get(MainViewModel::class.java)
+
+        val params: MutableMap<String, String> = HashMap()
+        params["post_id"] = id
+        params["upordown"] = v
+
+        viewModel.votePost(params).observe(viewLifecycleOwner, Observer {
+            it?.let { resource ->
+                when (resource.status) {
+                    Status.SUCCESS -> {
+                        Toast.makeText(context,"Voted!",Toast.LENGTH_SHORT).show()
+                    }
+                    Status.ERROR -> {
+                        Toast.makeText(context, resource.message, Toast.LENGTH_SHORT).show()
+                        Log.e("ERR", resource.message.toString())
+                        if(resource.message.toString().contains("401",ignoreCase = true)) {
+                            val intent = Intent(context, LoginActivity::class.java)
+                            startActivity(intent)
+                        }
+                    }
+                    Status.LOADING -> {
+                    }
+                }
+            }
+        })
     }
 }

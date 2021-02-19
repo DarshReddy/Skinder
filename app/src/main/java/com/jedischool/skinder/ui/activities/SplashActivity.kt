@@ -14,7 +14,7 @@ class SplashThemeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_common_splash)
 
-        handler.postDelayed(3000) {
+        handler.postDelayed(1500) {
             var intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()

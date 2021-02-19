@@ -55,12 +55,12 @@ class AddPostActivity : AppCompatActivity() {
         val uploadImage: Button = findViewById(R.id.upload_add_post)
         val cameraButton: Button = findViewById(R.id.camera_add_post)
         val addButton: TransitionButton = findViewById(R.id.add_post_button)
+        outputImage = File(externalCacheDir, "output_image.jpg")
+        if(outputImage.exists()) {
+            outputImage.delete()
+        }
 
         cameraButton.setOnClickListener{
-            outputImage = File(externalCacheDir, "output_image.jpg")
-            if(outputImage.exists()) {
-                outputImage.delete()
-            }
             outputImage.createNewFile()
             imageUri = if(Build.VERSION.SDK_INT >= 24){
                 FileProvider.getUriForFile(this, "com.jedischool.skinder.fileprovider", outputImage)
@@ -98,7 +98,7 @@ class AddPostActivity : AppCompatActivity() {
                     it?.let { resource ->
                         when (resource.status) {
                             Status.SUCCESS -> {
-                                Toast.makeText(this, resource.data?.Message, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, resource.data?.message, Toast.LENGTH_SHORT).show()
                                 addButton.stopAnimation(TransitionButton.StopAnimationStyle.EXPAND) {
                                     val intent = Intent(this,MainActivity::class.java)
                                     startActivity(intent)
@@ -126,7 +126,7 @@ class AddPostActivity : AppCompatActivity() {
                     it?.let { resource ->
                         when (resource.status) {
                                 Status.SUCCESS -> {
-                                    Toast.makeText(this, resource.data?.Message, Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this, resource.data?.message, Toast.LENGTH_SHORT).show()
                                     addButton.stopAnimation(TransitionButton.StopAnimationStyle.EXPAND) {
                                         val intent = Intent(this, MainActivity::class.java)
                                         startActivity(intent)

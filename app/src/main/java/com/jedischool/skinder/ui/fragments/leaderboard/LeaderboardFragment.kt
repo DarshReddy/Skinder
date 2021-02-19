@@ -1,5 +1,6 @@
     package com.jedischool.skinder.ui.fragments.leaderboard
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jedischool.skinder.R
 import com.jedischool.skinder.data.api.RetrofitBuilder
 import com.jedischool.skinder.data.model.UserLeaderboard
+import com.jedischool.skinder.ui.activities.LoginActivity
+import com.jedischool.skinder.ui.adapters.UserAdapter
 import com.jedischool.skinder.ui.base.ViewModelFactory
 import com.jedischool.skinder.ui.viewmodel.MainViewModel
 import com.jedischool.skinder.utils.Status
@@ -60,7 +63,8 @@ import com.rey.material.widget.ProgressView
                         Toast.makeText(context, resource.message, Toast.LENGTH_SHORT).show()
                         Log.e("ERR", resource.message.toString())
                         if(resource.message.toString().contains("401",ignoreCase = true)) {
-
+                            val intent = Intent(context, LoginActivity::class.java)
+                            startActivity(intent)
                         }
                     }
                     Status.LOADING -> {

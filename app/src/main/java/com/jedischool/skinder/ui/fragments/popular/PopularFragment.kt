@@ -1,4 +1,4 @@
-package com.jedischool.skinder.ui.fragments.trending
+package com.jedischool.skinder.ui.fragments.popular
 
 import android.content.Intent
 import android.os.Bundle
@@ -17,44 +17,44 @@ import com.jedischool.skinder.data.api.RetrofitBuilder
 import com.jedischool.skinder.data.model.PostDetail
 import com.jedischool.skinder.ui.activities.LoginActivity
 import com.jedischool.skinder.ui.activities.PostDetailActivity
-import com.jedischool.skinder.ui.adapters.TrendingAdapter
 import com.jedischool.skinder.ui.base.ViewModelFactory
+import com.jedischool.skinder.ui.adapters.PostAdapter
 import com.jedischool.skinder.ui.viewmodel.MainViewModel
 import com.jedischool.skinder.utils.Status
 import com.rey.material.widget.ProgressView
 
-class TrendingFragment : Fragment(), TrendingAdapter.PostClicked {
+class PopularFragment: Fragment(), PostAdapter.PostClicked {
 
-    private lateinit var trendingAdapter: TrendingAdapter
+    private lateinit var postAdapter: PostAdapter
     private lateinit var posts: ArrayList<PostDetail>
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
 
-        return inflater.inflate(R.layout.fragment_trending, container, false)
+        return inflater.inflate(R.layout.fragment_popular, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val trendingRecycler : RecyclerView = view.findViewById(R.id.recycler_trending)
+        val trendingRecycler : RecyclerView = view.findViewById(R.id.recycler_popular)
         trendingRecycler.layoutManager = LinearLayoutManager(context)
-        trendingAdapter = context?. let { TrendingAdapter(arrayListOf(), it, this) }!!
-        trendingRecycler.adapter = trendingAdapter
-        val progressView: ProgressView = view.findViewById(R.id.progress_trending)
+        postAdapter = context?.let {  PostAdapter(arrayListOf(), it, this) }!!
+        trendingRecycler.adapter = postAdapter
+        val progressView: ProgressView = view.findViewById(R.id.progress_popular)
         val viewModel = ViewModelProvider(
                 this,
                 ViewModelFactory(RetrofitBuilder.apiService)
         ).get(MainViewModel::class.java)
-        viewModel.getTrending().observe(viewLifecycleOwner, Observer {
+        viewModel.getPopular().observe(viewLifecycleOwner, Observer {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {
                         posts = (resource.data as ArrayList<PostDetail>?)!!
-                        trendingAdapter.apply {
+                        postAdapter.apply {
                             addPosts(posts)
                             notifyDataSetChanged()
                         }
@@ -91,7 +91,7 @@ class TrendingFragment : Fragment(), TrendingAdapter.PostClicked {
     }
 
     override fun votePost(v: String, id: String) {
-        val viewModel =ViewModelProvider(
+        val viewModel = ViewModelProvider(
                 this,
                 ViewModelFactory(RetrofitBuilder.apiService)
         ).get(MainViewModel::class.java)
@@ -104,7 +104,7 @@ class TrendingFragment : Fragment(), TrendingAdapter.PostClicked {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {
-                        Toast.makeText(context,"Voted!",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context,"Voted!", Toast.LENGTH_SHORT).show()
                     }
                     Status.ERROR -> {
                         Toast.makeText(context, resource.message, Toast.LENGTH_SHORT).show()

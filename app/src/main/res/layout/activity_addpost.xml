@@ -1,85 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/image_add_post"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:padding="@dimen/size_4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/post_image" />
+        android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/title_add_post"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:autofillHints="title"
-        android:drawablePadding="8dp"
-        android:hint="@string/add_post_title"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_add_post" />
+        <ImageView
+            android:id="@+id/image_add_post"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:padding="@dimen/size_4"
+            android:src="@drawable/image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/post_image" />
 
-    <EditText
-        android:id="@+id/desc_add_post"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:autofillHints="description"
-        android:hint="@string/add_post_description"
-        android:inputType="text"
-        android:maxLength="1000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_add_post" />
+        <EditText
+            android:id="@+id/title_add_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:autofillHints="title"
+            android:drawablePadding="8dp"
+            android:hint="@string/add_post_title"
+            android:inputType="textCapSentences"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image_add_post" />
 
-    <com.rey.material.widget.Button
-        android:id="@+id/upload_add_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/size_20"
-        android:layout_marginTop="44dp"
-        android:drawableStart="@drawable/gallery"
-        android:drawablePadding="@dimen/size_4"
-        android:padding="@dimen/size_4"
-        android:text="@string/upload_image"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/desc_add_post" />
+        <EditText
+            android:id="@+id/desc_add_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:autofillHints="description"
+            android:hint="@string/add_post_description"
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxLength="1000"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title_add_post" />
 
-    <com.rey.material.widget.Button
-        android:id="@+id/camera_add_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:drawableStart="@drawable/camera"
-        android:drawablePadding="@dimen/size_4"
-        android:padding="@dimen/size_4"
-        android:text="@string/capture"
-        app:layout_constraintStart_toEndOf="@+id/upload_add_post"
-        app:layout_constraintTop_toTopOf="@+id/upload_add_post" />
+        <com.rey.material.widget.Button
+            android:id="@+id/upload_add_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/size_20"
+            android:layout_marginTop="40dp"
+            android:drawableStart="@drawable/gallery"
+            android:drawablePadding="@dimen/size_4"
+            android:padding="@dimen/size_4"
+            android:text="@string/upload_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/desc_add_post" />
 
-    <com.royrodriguez.transitionbutton.TransitionButton
-        android:id="@+id/add_post_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/size_4"
-        android:text="@string/add_post"
-        android:textColor="@color/white"
-        app:defaultColor="@color/black"
-        app:layout_constraintEnd_toStartOf="@+id/camera_add_post"
-        app:layout_constraintStart_toEndOf="@+id/upload_add_post"
-        app:layout_constraintTop_toBottomOf="@+id/upload_add_post"
-        app:loaderColor="@color/teal_200" />
+        <com.rey.material.widget.Button
+            android:id="@+id/camera_add_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/size_20"
+            android:drawableStart="@drawable/camera"
+            android:drawablePadding="@dimen/size_4"
+            android:padding="@dimen/size_4"
+            android:text="@string/capture"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/upload_add_post" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.royrodriguez.transitionbutton.TransitionButton
+            android:id="@+id/add_post_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/size_4"
+            android:text="@string/add_post"
+            android:textColor="@color/white"
+            app:defaultColor="@color/black"
+            app:layout_constraintEnd_toStartOf="@+id/camera_add_post"
+            app:layout_constraintStart_toEndOf="@+id/upload_add_post"
+            app:layout_constraintTop_toBottomOf="@+id/upload_add_post"
+            app:loaderColor="@color/colorPrimary" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

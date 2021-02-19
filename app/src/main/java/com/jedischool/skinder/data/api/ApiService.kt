@@ -19,8 +19,11 @@ interface ApiService {
     @GET("posts/me/")
     suspend fun getMyPosts(): List<PostDetail>
 
-    @GET("posts/popular/")
+    @GET("posts/trending/")
     suspend fun getTrending(): List<PostDetail>
+
+    @GET("posts/popular/")
+    suspend fun getPopular(): List<PostDetail>
 
     @GET("users/leaderboard/")
     suspend fun getLeaderboard(): List<UserLeaderboard>
@@ -31,9 +34,20 @@ interface ApiService {
     @Multipart
     @POST("posts/")
     suspend fun addPostImage(@Part image: MultipartBody.Part, @Part title: MultipartBody.Part,
-                        @Part caption: MultipartBody.Part): AddPostResponse
+                        @Part caption: MultipartBody.Part): MessageResponse
 
     @Multipart
     @POST("posts/")
-    suspend fun addPost(@Part title: MultipartBody.Part, @Part caption: MultipartBody.Part): AddPostResponse
+    suspend fun addPost(@Part title: MultipartBody.Part, @Part caption: MultipartBody.Part): MessageResponse
+
+    @PUT("posts/uord/")
+    @FormUrlEncoded
+    suspend fun votePost(@FieldMap params: Map<String, String>): MessageResponse
+
+    @GET("{postid}/comments/")
+    suspend fun getPostComments(@Path("postid") id:String): List<CommentDetail>
+
+    @PUT("comments/uord/")
+    @FormUrlEncoded
+    suspend fun voteComment(@FieldMap params: Map<String, String>): MessageResponse
 }

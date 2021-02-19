@@ -30,6 +30,12 @@
         tools:layout="@layout/fragment_trending"/>
 
     <fragment
+        android:id="@+id/nav_popular"
+        android:name="com.jedischool.skinder.ui.fragments.popular.PopularFragment"
+        android:label="@string/popular_posts"
+        tools:layout="@layout/fragment_popular"/>
+
+    <fragment
         android:id="@+id/nav_leaderboard"
         android:name="com.jedischool.skinder.ui.fragments.leaderboard.LeaderboardFragment"
         android:label="@string/leaderboard"
