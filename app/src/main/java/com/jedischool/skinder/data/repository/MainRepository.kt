@@ -17,4 +17,5 @@ class MainRepository(private val apiService: ApiService) {
     suspend fun votePost(m:Map<String, String>) = apiService.votePost(m)
     suspend fun voteComment(m:Map<String, String>) = apiService.voteComment(m)
     suspend fun getPostComments(id:String) = apiService.getPostComments(id)
+    suspend fun getThread(id: String) = apiService.getThread(id)
 }

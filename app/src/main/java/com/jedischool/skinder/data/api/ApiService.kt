@@ -44,10 +44,13 @@ interface ApiService {
     @FormUrlEncoded
     suspend fun votePost(@FieldMap params: Map<String, String>): MessageResponse
 
-    @GET("{postid}/comments/")
-    suspend fun getPostComments(@Path("postid") id:String): List<CommentDetail>
+    @GET("{post_id}/comments/")
+    suspend fun getPostComments(@Path("post_id") id:String): List<CommentDetail>
 
     @PUT("comments/uord/")
     @FormUrlEncoded
     suspend fun voteComment(@FieldMap params: Map<String, String>): MessageResponse
+
+    @GET("comments/{comment_id}/thread")
+    suspend fun getThread(@Path("comment_id") id: String): List<CommentDetail>
 }

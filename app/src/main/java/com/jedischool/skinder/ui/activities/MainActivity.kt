@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                 this,
                 ViewModelFactory(RetrofitBuilder.apiService)
         ).get(MainViewModel::class.java)
-        viewModel.getProfile().observe(this, Observer {
+        viewModel.getProfile().observe(this, {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {
@@ -66,7 +66,8 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this, resource.message, Toast.LENGTH_SHORT).show()
                         Log.e("ERR", resource.message.toString())
                         if(resource.message.toString().contains("401",ignoreCase = true)) {
-
+                            val intent = Intent(this, LoginActivity::class.java)
+                            startActivity(intent)
                         }
                     }
                     Status.LOADING -> {
@@ -109,9 +110,5 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }
-
-    fun onPostClicked() {
-
     }
 }

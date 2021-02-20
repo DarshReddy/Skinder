@@ -7,34 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.jedischool.skinder.R
 import com.jedischool.skinder.data.model.CommentDetail
-import com.jedischool.skinder.ui.viewmodel.MainViewModel
 
-class CommentsAdapter(private val comments: ArrayList<CommentDetail>, private val context: Context, private val commentHelper: CommentHelper, private val viewModel: MainViewModel)
-    :RecyclerView.Adapter<CommentsAdapter.DataViewHolder>()
+class ThreadAdapter(private val thread: ArrayList<CommentDetail>, private val context: Context, private val commentsHelper: CommentsAdapter.CommentHelper)
+    :RecyclerView.Adapter<ThreadAdapter.DataViewHolder>()
 {
-    interface CommentHelper {
-        fun loadThread(id: String, threadRecycler: ThreadAdapter)
-        fun voteComment(v:String, id:String)
-    }
-
-    private val viewPool = RecyclerView.RecycledViewPool()
-
     class DataViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val threadRecycler: RecyclerView = itemView.findViewById(R.id.thread_recycler)
-        fun bind(comment: CommentDetail, commentHelper: CommentHelper) {
+        fun bind(comment: CommentDetail, commentHelper: CommentsAdapter.CommentHelper) {
             itemView.apply {
-                val userImage: ImageView = findViewById(R.id.image_comment_card)
-                val userName: TextView = findViewById(R.id.name_comment_card)
-                val commentText: TextView = findViewById(R.id.comment_comment_card)
-                val upvotes: TextView = findViewById(R.id.comment_card_upvotes)
-                val downvotes: TextView = findViewById(R.id.comment_card_downvotes)
-                val upVote:ImageView = findViewById(R.id.comment_upvote_icon)
-                val downVote:ImageView = findViewById(R.id.comment_downvote_icon)
+                val userImage: ImageView = findViewById(R.id.image_thread_card)
+                val userName: TextView = findViewById(R.id.name_thread_card)
+                val commentText: TextView = findViewById(R.id.thread_thread_card)
+                val upvotes: TextView = findViewById(R.id.thread_card_upvotes)
+                val downvotes: TextView = findViewById(R.id.thread_card_downvotes)
+                val upVote: ImageView = findViewById(R.id.thread_upvote_icon)
+                val downVote: ImageView = findViewById(R.id.thread_downvote_icon)
 
                 Glide.with(this).load(comment.user_image).into(userImage)
                 userName.text = comment.name
@@ -111,33 +101,18 @@ class CommentsAdapter(private val comments: ArrayList<CommentDetail>, private va
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataViewHolder =
-            DataViewHolder(LayoutInflater.from(context).inflate(R.layout.comment_card_item, parent, false))
-
-    override fun getItemCount(): Int = comments.size
+            DataViewHolder(LayoutInflater.from(context).inflate(R.layout.thread_card_item, parent, false))
 
     override fun onBindViewHolder(holder: DataViewHolder, position: Int) {
-        holder.bind(comments[position],commentHelper)
-
-        val threadLayoutManager = LinearLayoutManager(
-                holder.threadRecycler.context,
-                LinearLayoutManager.VERTICAL,
-                false
-        )
-
-        val threadAdapter = ThreadAdapter(arrayListOf(), context, commentHelper)
-
-        holder.threadRecycler.apply {
-            layoutManager = threadLayoutManager
-            adapter = threadAdapter
-            setRecycledViewPool(viewPool)
-        }
-        commentHelper.loadThread(comments[position].comment_id,threadAdapter)
+        holder.bind(thread[position], commentsHelper)
     }
 
-    fun addPosts(comments: List<CommentDetail>) {
-        this.comments.apply {
+    override fun getItemCount(): Int = thread.size
+
+    fun addComments(thread: ArrayList<CommentDetail>) {
+        this.thread.apply {
             clear()
-            addAll(comments)
+            addAll(thread)
         }
     }
 }

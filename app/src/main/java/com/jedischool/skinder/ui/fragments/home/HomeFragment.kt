@@ -54,7 +54,7 @@ class HomeFragment : Fragment(), PostAdapter.PostClicked {
             this,
             ViewModelFactory(RetrofitBuilder.apiService)
         ).get(MainViewModel::class.java)
-        viewModel.getPosts().observe(viewLifecycleOwner, Observer {
+        viewModel.getPosts().observe(viewLifecycleOwner,  {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/size_4">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/image_thread_card"
+        android:layout_width="@dimen/size_15"
+        android:layout_height="@dimen/size_15"
+        android:layout_gravity="center"
+        android:contentDescription="@string/profile_picture"
+        android:scaleType="centerCrop"
+        android:src="@drawable/user"
+        app:civ_border_color="@color/colorPrimary"
+        app:civ_border_width="2dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/name_thread_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="4dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:hint="@string/username"
+        android:maxLines="1"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/image_thread_card"
+        app:layout_constraintTop_toTopOf="@+id/image_thread_card" />
+
+    <TextView
+        android:id="@+id/thread_thread_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/comment"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/name_thread_card"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/name_thread_card"
+        app:layout_constraintTop_toBottomOf="@+id/name_thread_card" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="@+id/thread_thread_card"
+        app:layout_constraintTop_toBottomOf="@+id/thread_thread_card">
+
+        <ImageView
+            android:id="@+id/thread_upvote_icon"
+            android:layout_width="@dimen/size_10"
+            android:layout_height="@dimen/size_10"
+            android:contentDescription="@string/upvotes"
+            android:padding="@dimen/size_1"
+            android:scaleType="fitCenter"
+            android:src="@drawable/up" />
+
+        <TextView
+            android:id="@+id/thread_card_upvotes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="@dimen/size_1"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/thread_downvote_icon"
+            android:layout_width="@dimen/size_10"
+            android:layout_height="@dimen/size_10"
+            android:contentDescription="@string/downvotes"
+            android:padding="@dimen/size_1"
+            android:scaleType="fitCenter"
+            android:src="@drawable/down" />
+
+        <TextView
+            android:id="@+id/thread_card_downvotes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="@dimen/size_1"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,11 +6,12 @@ import androidx.lifecycle.liveData
 import com.jedischool.skinder.data.model.*
 import com.jedischool.skinder.data.repository.MainRepository
 import com.jedischool.skinder.utils.Resource
+import kotlinx.coroutines.Dispatchers
 import okhttp3.MultipartBody
 import java.lang.Exception
 
 class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
-    fun getToken(token:Map<String,String>) : LiveData<Resource<AuthResponse>> = liveData {
+    fun getToken(token:Map<String,String>) : LiveData<Resource<AuthResponse>> = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = mainRepository.getToken(token)))
@@ -19,7 +20,7 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
         }
     }
 
-    fun refreshToken() : LiveData<Resource<RefreshTokenResponse>> = liveData {
+    fun refreshToken() : LiveData<Resource<RefreshTokenResponse>> = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = mainRepository.refreshToken()))
@@ -28,7 +29,7 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
         }
     }
 
-    fun getPosts() : LiveData<Resource<List<PostDetail>>> = liveData {
+    fun getPosts() : LiveData<Resource<List<PostDetail>>> = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = mainRepository.getPosts()))
@@ -37,7 +38,7 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
         }
     }
 
-    fun getTrending() : LiveData<Resource<List<PostDetail>>> = liveData {
+    fun getTrending() : LiveData<Resource<List<PostDetail>>> = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = mainRepository.getTrending()))
@@ -46,7 +47,7 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
         }
     }
 
-    fun getPopular() : LiveData<Resource<List<PostDetail>>> = liveData {
+    fun getPopular() : LiveData<Resource<List<PostDetail>>> = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = mainRepository.getPopular()))
@@ -55,7 +56,7 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
         }
     }
 
-    fun getMyPosts() : LiveData<Resource<List<PostDetail>>> = liveData {
+    fun getMyPosts() : LiveData<Resource<List<PostDetail>>> = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = mainRepository.getMyPosts()))
@@ -64,7 +65,7 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
         }
     }
 
-    fun getLeaderboard() : LiveData<Resource<List<UserLeaderboard>>> = liveData {
+    fun getLeaderboard() : LiveData<Resource<List<UserLeaderboard>>> = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = mainRepository.getLeaderboard()))
@@ -73,7 +74,7 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
         }
     }
 
-    fun getProfile() : LiveData<Resource<UserDetailResponse>> = liveData {
+    fun getProfile() : LiveData<Resource<UserDetailResponse>> = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = mainRepository.getProfile()))
@@ -83,7 +84,7 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
     }
 
     fun addPostImage(img:MultipartBody.Part,t:MultipartBody.Part,c: MultipartBody.Part)
-            : LiveData<Resource<MessageResponse>> = liveData {
+            : LiveData<Resource<MessageResponse>> = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = mainRepository.addPostImage(img,t,c)))
@@ -93,7 +94,7 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
     }
 
     fun addPost(t:MultipartBody.Part,c: MultipartBody.Part)
-            : LiveData<Resource<MessageResponse>> = liveData {
+            : LiveData<Resource<MessageResponse>> = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = mainRepository.addPost(t,c)))
@@ -103,7 +104,7 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
     }
 
     fun votePost(m:Map<String, String>)
-            : LiveData<Resource<MessageResponse>> = liveData {
+            : LiveData<Resource<MessageResponse>> = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = mainRepository.votePost(m)))
@@ -113,7 +114,7 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
     }
 
     fun voteComment(m:Map<String, String>)
-            : LiveData<Resource<MessageResponse>> = liveData {
+            : LiveData<Resource<MessageResponse>> = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = mainRepository.voteComment(m)))
@@ -123,10 +124,20 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
     }
 
     fun getPostComments(id:String)
-            : LiveData<Resource<List<CommentDetail>>> = liveData {
+            : LiveData<Resource<List<CommentDetail>>> = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = mainRepository.getPostComments(id)))
+        } catch (e:Exception) {
+            emit(Resource.error(data = null, message = e.message ?: "error occurred!"))
+        }
+    }
+
+    fun getThread(id:String)
+            : LiveData<Resource<List<CommentDetail>>> = liveData(Dispatchers.IO) {
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = mainRepository.getThread(id)))
         } catch (e:Exception) {
             emit(Resource.error(data = null, message = e.message ?: "error occurred!"))
         }

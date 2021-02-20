@@ -18,14 +18,16 @@ import com.jedischool.skinder.R
 import com.jedischool.skinder.data.api.RetrofitBuilder
 import com.jedischool.skinder.data.model.CommentDetail
 import com.jedischool.skinder.ui.adapters.CommentsAdapter
+import com.jedischool.skinder.ui.adapters.ThreadAdapter
 import com.jedischool.skinder.ui.base.ViewModelFactory
 import com.jedischool.skinder.ui.viewmodel.MainViewModel
 import com.jedischool.skinder.utils.Status
 import com.rey.material.widget.ProgressView
 
-class PostDetailActivity : AppCompatActivity(), CommentsAdapter.CommentClicked {
+class PostDetailActivity : AppCompatActivity(), CommentsAdapter.CommentHelper {
     private lateinit var commentsAdapter: CommentsAdapter
     private lateinit var comments: ArrayList<CommentDetail>
+    private lateinit var thread: ArrayList<CommentDetail>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,19 +123,20 @@ class PostDetailActivity : AppCompatActivity(), CommentsAdapter.CommentClicked {
         titleTextView.text = title
         captionTextView.text = caption
 
-        val commentRecycler: RecyclerView = findViewById(R.id.recycler_comments)
-        commentRecycler.layoutManager = LinearLayoutManager(this)
-        commentsAdapter = CommentsAdapter(arrayListOf(),this,this)
-        commentRecycler.adapter = commentsAdapter
-        val progress: ProgressView = findViewById(R.id.progress_comments)
-
         val viewModel =ViewModelProvider(
                 this,
                 ViewModelFactory(RetrofitBuilder.apiService)
         ).get(MainViewModel::class.java)
+
+        val commentRecycler: RecyclerView = findViewById(R.id.recycler_comments)
+        commentRecycler.layoutManager = LinearLayoutManager(this)
+        commentsAdapter = CommentsAdapter(arrayListOf(),this,this,viewModel)
+        commentRecycler.adapter = commentsAdapter
+        val progress: ProgressView = findViewById(R.id.progress_comments)
+
         if (id != null) {
-            viewModel.getPostComments(id).observe(this, {
-                it?.let { resource ->
+            viewModel.getPostComments(id).observe(this, { outIt ->
+                outIt?.let { resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {
                             comments = (resource.data as ArrayList<CommentDetail>?)!!
@@ -193,8 +196,35 @@ class PostDetailActivity : AppCompatActivity(), CommentsAdapter.CommentClicked {
         })
     }
 
-    override fun onCommentClicked(pos: Int) {
-        Toast.makeText(this, "Comment $pos clicked", Toast.LENGTH_SHORT).show()
+    override fun loadThread(id: String, threadRecycler: ThreadAdapter) {
+        val viewModel = ViewModelProvider(
+                this,
+                ViewModelFactory(RetrofitBuilder.apiService)
+        ).get(MainViewModel::class.java)
+
+        viewModel.getThread(id).observe(this, {
+            it?.let { resource ->
+                when (resource.status) {
+                    Status.SUCCESS -> {
+                        thread = (resource.data as ArrayList<CommentDetail>?)!!
+                        threadRecycler?.apply {
+                            addComments(thread)
+                            notifyDataSetChanged()
+                        }
+                    }
+                    Status.ERROR -> {
+                        Toast.makeText(this, resource.message, Toast.LENGTH_SHORT).show()
+                        Log.e("ERR", resource.message.toString())
+                        if(resource.message.toString().contains("401",ignoreCase = true)) {
+                            val intent = Intent(this, LoginActivity::class.java)
+                            startActivity(intent)
+                        }
+                    }
+                    Status.LOADING -> {
+                    }
+                }
+            }
+        })
     }
 
     override fun voteComment(v: String, id: String) {
