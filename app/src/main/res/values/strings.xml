@@ -35,4 +35,5 @@
     <string name="add_comment">Add Comment</string>
     <string name="add">Add</string>
     <string name="add_reply">Add Reply</string>
+    <string name="badge_info">Badge Info</string>
 </resources>

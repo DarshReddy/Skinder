@@ -30,6 +30,7 @@ class UserAdapter(private val users:ArrayList<UserLeaderboard>, private val cont
                     user.points>60 -> badge.setImageResource(R.drawable.badge4)
                     user.points>40 -> badge.setImageResource(R.drawable.badge3)
                     user.points>20 -> badge.setImageResource(R.drawable.badge2)
+                    else -> badge.setImageResource(R.drawable.badge1)
                 }
             }
         }

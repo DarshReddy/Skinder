@@ -60,12 +60,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:textColor="@color/black"
                 android:hint="@string/user_email"
                 android:textAlignment="center"
+                android:textColor="@color/black"
                 android:textSize="20sp"
-                app:layout_constraintTop_toBottomOf="@+id/profile_username"
-                tools:layout_editor_absoluteX="16dp" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profile_username" />
 
             <TextView
                 android:id="@+id/profile_user_points"
@@ -81,6 +82,19 @@
                 app:layout_constraintStart_toStartOf="@+id/profile_username"
                 app:layout_constraintTop_toBottomOf="@+id/profile_username" />
 
+            <TextView
+                android:id="@+id/badge_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:hint="@string/badge_info"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profile_user_points" />
+
             <ImageView
                 android:id="@+id/profile_badge_4"
                 android:layout_width="60dp"
@@ -95,32 +109,32 @@
                 android:id="@+id/profile_badge_1"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_marginTop="@dimen/size_30"
+                android:layout_marginTop="30dp"
                 android:layout_marginEnd="12dp"
                 android:src="@drawable/badge1"
-                app:tint="@color/colorPrimary"
                 app:layout_constraintEnd_toStartOf="@+id/profile_badge_2"
-                app:layout_constraintTop_toBottomOf="@+id/profile_user_points" />
+                app:layout_constraintTop_toBottomOf="@+id/badge_info"
+                app:tint="@color/colorPrimary" />
 
             <ImageView
                 android:id="@+id/profile_badge_2"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_marginTop="@dimen/size_30"
+                android:layout_marginTop="30dp"
                 android:layout_marginEnd="20dp"
                 android:src="@drawable/badge2"
                 app:layout_constraintEnd_toStartOf="@+id/profile_badge_3"
-                app:layout_constraintTop_toBottomOf="@+id/profile_user_points" />
+                app:layout_constraintTop_toBottomOf="@+id/badge_info" />
 
             <ImageView
                 android:id="@+id/profile_badge_3"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_marginTop="@dimen/size_30"
-                android:layout_marginEnd="70dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="84dp"
                 android:src="@drawable/badge3"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profile_user_points" />
+                app:layout_constraintTop_toBottomOf="@+id/badge_info" />
 
             <ImageView
                 android:id="@+id/profile_badge_5"

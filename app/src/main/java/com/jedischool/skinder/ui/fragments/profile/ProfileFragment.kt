@@ -29,6 +29,7 @@ class ProfileFragment : Fragment() {
     private lateinit var badge3:ImageView
     private lateinit var badge4:ImageView
     private lateinit var badge5:ImageView
+    private lateinit var info:TextView
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -44,6 +45,8 @@ class ProfileFragment : Fragment() {
         val username:TextView = view.findViewById(R.id.profile_username)
         val userEmail: TextView = view.findViewById(R.id.profile_user_email)
         val points:TextView = view.findViewById(R.id.profile_user_points)
+        info = view.findViewById(R.id.badge_info)
+
         badge2 = view.findViewById(R.id.profile_badge_2)
         badge3 = view.findViewById(R.id.profile_badge_3)
         badge4 = view.findViewById(R.id.profile_badge_4)
@@ -80,9 +83,21 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setBadges(points: Int) {
-        if(points>80) badge5.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
-        if(points>60) badge4.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
-        if(points>40) badge3.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
-        if(points>20) badge2.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
+        if(points>80) {
+            badge5.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
+            info.text = "You have achieved all the badged! :)"
+        }
+        if(points>60) {
+            badge4.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
+            info.text = "Just "+ (61-points) + " to go for the next badge!"
+        }
+        if(points>40) {
+            badge3.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
+            info.text = "Just "+ (41-points) + " to go for the next badge!"
+        }
+        if(points>20) {
+            badge2.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
+            info.text = "Just "+ (21-points) + " to go for the next badge!"
+        }
     }
 }
