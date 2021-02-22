@@ -1,15 +1,14 @@
 package com.jedischool.skinder.ui.activities
 
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +21,7 @@ import com.jedischool.skinder.ui.adapters.ThreadAdapter
 import com.jedischool.skinder.ui.base.ViewModelFactory
 import com.jedischool.skinder.ui.viewmodel.MainViewModel
 import com.jedischool.skinder.utils.Status
+import com.rey.material.widget.Button
 import com.rey.material.widget.ProgressView
 
 class PostDetailActivity : AppCompatActivity(), CommentsAdapter.CommentHelper {
@@ -33,95 +33,20 @@ class PostDetailActivity : AppCompatActivity(), CommentsAdapter.CommentHelper {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_detail)
 
-        val image:ImageView = findViewById(R.id.image_detail_post)
         val titleTextView: TextView = findViewById(R.id.title_post_detail)
-        val captionTextView: TextView = findViewById(R.id.desc_post_detail)
         val author: ImageView = findViewById(R.id.author_post_detail)
-        val upVote: ImageView = findViewById(R.id.upvote_detail_icon)
-        val downVote: ImageView = findViewById(R.id.downvote_detail_icon)
-        val postUpVotes : TextView = findViewById(R.id.post_detail_upvotes)
-        val postDownVotes : TextView = findViewById(R.id.post_detail_downvotes)
+        val desc: TextView = findViewById(R.id.desc_post_detail)
+        val commentText: EditText = findViewById(R.id.comment_edit)
+        val commentAdd: Button = findViewById(R.id.comment_add_btn)
 
         val id = intent.getStringExtra("id")
         val title = intent.getStringExtra("title")
-        val caption = intent.getStringExtra("caption")
-        val imageUrl = intent.getStringExtra("image")
-        var upvotes = intent.getIntExtra("up",0)
-        var downvotes = intent.getIntExtra("down",0)
-        var upordown = intent.getStringExtra("uord")
         val userImage = intent.getStringExtra("author")
+        val caption = intent.getStringExtra("caption")
 
-        postUpVotes.text = upvotes.toString()
-        postDownVotes.text = downvotes.toString()
-
-        when (upordown) {
-            "u" -> {
-                upVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
-            }
-            "d" -> {
-                downVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
-            }
-            else -> {
-                upVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.black))
-                downVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.black))
-            }
-        }
-
-        upVote.setOnClickListener {
-            when (upordown) {
-                "u" -> {
-                    upVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.black))
-                    upordown=""
-                    upvotes -= 1
-                }
-                "d" -> {
-                    downVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.black))
-                    downvotes -= 1
-                    upVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
-                    upordown="u"
-                    upvotes += 1
-                }
-                else -> {
-                    upVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
-                    upordown="u"
-                    upvotes += 1
-                }
-            }
-            postUpVotes.text = upvotes.toString()
-            postDownVotes.text = downvotes.toString()
-            votePost("u", id!!)
-        }
-
-        downVote.setOnClickListener {
-            when (upordown) {
-                "d" -> {
-                    downVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.black))
-                    upordown=""
-                    downvotes -= 1
-                }
-                "u" -> {
-                    upVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.black))
-                    upvotes -= 1
-                    downVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
-                    upordown="d"
-                    downvotes += 1
-                }
-                else -> {
-                    downVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
-                    upordown="d"
-                    downvotes += 1
-                }
-            }
-            postUpVotes.text = upvotes.toString()
-            postDownVotes.text = downvotes.toString()
-            votePost("d",id!!)
-        }
-
-
-        Glide.with(this).load(imageUrl).into(image)
         Glide.with(this).load(userImage).into(author)
         titleTextView.text = title
-        captionTextView.text = caption
+        desc.text = caption
 
         val viewModel =ViewModelProvider(
                 this,
@@ -130,56 +55,60 @@ class PostDetailActivity : AppCompatActivity(), CommentsAdapter.CommentHelper {
 
         val commentRecycler: RecyclerView = findViewById(R.id.recycler_comments)
         commentRecycler.layoutManager = LinearLayoutManager(this)
-        commentsAdapter = CommentsAdapter(arrayListOf(),this,this,viewModel)
+        commentsAdapter = CommentsAdapter(arrayListOf(),this,this)
         commentRecycler.adapter = commentsAdapter
         val progress: ProgressView = findViewById(R.id.progress_comments)
 
         if (id != null) {
-            viewModel.getPostComments(id).observe(this, { outIt ->
-                outIt?.let { resource ->
-                    when (resource.status) {
-                        Status.SUCCESS -> {
-                            comments = (resource.data as ArrayList<CommentDetail>?)!!
-                            commentsAdapter.apply {
-                                addPosts(comments)
-                                notifyDataSetChanged()
+            getComments(id,viewModel,progress,commentRecycler)
+        }
+
+        commentAdd.setOnClickListener {
+            if(commentText.text.toString() == "") {
+                Toast.makeText(this, "Please add comment text!", Toast.LENGTH_LONG).show()
+            }
+            else {
+                val params: MutableMap<String, String> = HashMap()
+                params["post_id"] = id!!
+                params["comment"] = commentText.text.toString()
+                viewModel.addComment(params).observe(this, { inIt ->
+                    inIt?.let { resource ->
+                        when (resource.status) {
+                            Status.SUCCESS -> {
+                                Toast.makeText(this, resource.data?.message, Toast.LENGTH_LONG).show()
+                                getComments(id, viewModel, progress, commentRecycler)
+                                commentText.text.clear()
                             }
-                            progress.visibility = View.GONE
-                            commentRecycler.visibility = View.VISIBLE
-                        }
-                        Status.ERROR -> {
-                            Toast.makeText(this, resource.message, Toast.LENGTH_SHORT).show()
-                            Log.e("ERR", resource.message.toString())
-                            if(resource.message.toString().contains("401",ignoreCase = true)) {
-                                val intent = Intent(this, LoginActivity::class.java)
-                                startActivity(intent)
+                            Status.ERROR -> {
+                                Toast.makeText(this, resource.message, Toast.LENGTH_SHORT).show()
+                                Log.e("ERR", resource.message.toString())
+                                if (resource.message.toString().contains("401", ignoreCase = true)) {
+                                    val intent = Intent(this, LoginActivity::class.java)
+                                    startActivity(intent)
+                                }
                             }
-                        }
-                        Status.LOADING -> {
-                            progress.visibility = View.VISIBLE
-                            commentRecycler.visibility = View.GONE
+                            Status.LOADING -> {
+                            }
                         }
                     }
-                }
-            })
+                })
+            }
         }
     }
 
-    private fun votePost(v: String, id: String) {
-        val viewModel = ViewModelProvider(
-                this,
-                ViewModelFactory(RetrofitBuilder.apiService)
-        ).get(MainViewModel::class.java)
-
-        val params: MutableMap<String, String> = HashMap()
-        params["post_id"] = id
-        params["upordown"] = v
-
-        viewModel.votePost(params).observe(this, Observer {
-            it?.let { resource ->
+    private fun getComments(id: String, viewModel: MainViewModel, progress: ProgressView, commentRecycler: RecyclerView) {
+        viewModel.getPostComments(id).observe(this, { outIt ->
+            outIt?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {
-                        Toast.makeText(this,"Voted!", Toast.LENGTH_SHORT).show()
+                        comments = (resource.data as ArrayList<CommentDetail>?)!!
+                        if(comments.size == 0) Toast.makeText(this, "Be the first one to comment!",Toast.LENGTH_LONG).show()
+                        commentsAdapter.apply {
+                            addPosts(comments)
+                            notifyDataSetChanged()
+                        }
+                        progress.visibility = View.GONE
+                        commentRecycler.visibility = View.VISIBLE
                     }
                     Status.ERROR -> {
                         Toast.makeText(this, resource.message, Toast.LENGTH_SHORT).show()
@@ -190,13 +119,15 @@ class PostDetailActivity : AppCompatActivity(), CommentsAdapter.CommentHelper {
                         }
                     }
                     Status.LOADING -> {
+                        progress.visibility = View.VISIBLE
+                        commentRecycler.visibility = View.GONE
                     }
                 }
             }
         })
     }
 
-    override fun loadThread(id: String, threadRecycler: ThreadAdapter) {
+    override fun loadThread(position: Int, id: String, threadRecycler: ThreadAdapter) {
         val viewModel = ViewModelProvider(
                 this,
                 ViewModelFactory(RetrofitBuilder.apiService)
@@ -207,7 +138,7 @@ class PostDetailActivity : AppCompatActivity(), CommentsAdapter.CommentHelper {
                 when (resource.status) {
                     Status.SUCCESS -> {
                         thread = (resource.data as ArrayList<CommentDetail>?)!!
-                        threadRecycler?.apply {
+                        threadRecycler.apply {
                             addComments(thread)
                             notifyDataSetChanged()
                         }
@@ -225,6 +156,43 @@ class PostDetailActivity : AppCompatActivity(), CommentsAdapter.CommentHelper {
                 }
             }
         })
+    }
+
+    override fun addThread(id: String, comment: String, c_id: String, position: Int, commentId: String, threadAdapter: ThreadAdapter) {
+        val viewModel = ViewModelProvider(
+                this,
+                ViewModelFactory(RetrofitBuilder.apiService)
+        ).get(MainViewModel::class.java)
+
+        if(comment == "") {
+            Toast.makeText(this, "Please add reply text!", Toast.LENGTH_LONG).show()
+        }
+        else {
+            val params: MutableMap<String, String> = HashMap()
+            params["post_id"] = id
+            params["comment"] = comment
+            params["up_level_cid"] = c_id
+            viewModel.addComment(params).observe(this, { inIt ->
+                inIt?.let { resource ->
+                    when (resource.status) {
+                        Status.SUCCESS -> {
+                            Toast.makeText(this, resource.data?.message, Toast.LENGTH_LONG).show()
+                            loadThread(position,commentId,threadAdapter)
+                        }
+                        Status.ERROR -> {
+                            Toast.makeText(this, resource.message, Toast.LENGTH_SHORT).show()
+                            Log.e("ERR", resource.message.toString())
+                            if (resource.message.toString().contains("401", ignoreCase = true)) {
+                                val intent = Intent(this, LoginActivity::class.java)
+                                startActivity(intent)
+                            }
+                        }
+                        Status.LOADING -> {
+                        }
+                    }
+                }
+            })
+        }
     }
 
     override fun voteComment(v: String, id: String) {

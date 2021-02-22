@@ -26,10 +26,10 @@ import com.rey.material.widget.ProgressView
 
 class HomeFragment : Fragment(), PostAdapter.PostClicked {
 
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
     private lateinit var posts: ArrayList<PostDetail>
     private lateinit var adapter: PostAdapter
+    private lateinit var postRecycler: RecyclerView
+    private lateinit var progress: ProgressView
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -37,18 +37,17 @@ class HomeFragment : Fragment(), PostAdapter.PostClicked {
             savedInstanceState: Bundle?
     ): View {
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding.root
+        return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val postRecycler : RecyclerView = view.findViewById(R.id.recycler_home)
+        postRecycler = view.findViewById(R.id.recycler_home)
         postRecycler.layoutManager = LinearLayoutManager(context)
         adapter = context?.let { PostAdapter(arrayListOf(), it, this) }!!
         postRecycler.adapter = adapter
-        val progress : ProgressView = view.findViewById(R.id.progress_home)
+        progress = view.findViewById(R.id.progress_home)
 
         val viewModel =ViewModelProvider(
             this,
@@ -83,6 +82,38 @@ class HomeFragment : Fragment(), PostAdapter.PostClicked {
         })
     }
 
+    override fun onResume() {
+        val viewModel =ViewModelProvider(
+                this,
+                ViewModelFactory(RetrofitBuilder.apiService)
+        ).get(MainViewModel::class.java)
+
+        super.onResume()
+        viewModel.getPosts().observe(viewLifecycleOwner,  {
+            it?.let { resource ->
+                when (resource.status) {
+                    Status.SUCCESS -> {
+                        posts = (resource.data as ArrayList<PostDetail>?)!!
+                        adapter.apply {
+                            addPosts(posts)
+                            notifyDataSetChanged()
+                        }
+                    }
+                    Status.ERROR -> {
+                        Toast.makeText(context, resource.message, Toast.LENGTH_SHORT).show()
+                        Log.e("ERR", resource.message.toString())
+                        if(resource.message.toString().contains("401",ignoreCase = true)) {
+                            val intent = Intent(context, LoginActivity::class.java)
+                            startActivity(intent)
+                        }
+                    }
+                    Status.LOADING -> {
+                    }
+                }
+            }
+        })
+    }
+
     override fun onPostClicked(pos: Int) {
         val intent = Intent(context, PostDetailActivity::class.java)
         intent.putExtra("id",posts[pos].post_id)
@@ -106,7 +137,7 @@ class HomeFragment : Fragment(), PostAdapter.PostClicked {
         params["post_id"] = id
         params["upordown"] = v
 
-        viewModel.votePost(params).observe(viewLifecycleOwner, Observer {
+        viewModel.votePost(params).observe(viewLifecycleOwner,  {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {

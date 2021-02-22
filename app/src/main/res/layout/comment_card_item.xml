@@ -1,135 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_comment"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent">
+    android:layout_gravity="center"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardBackgroundColor="#fff"
+    app:cardCornerRadius="@dimen/size_5"
+    app:cardElevation="@dimen/size_2"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_comment"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="#fff"
-        app:cardCornerRadius="@dimen/size_5"
-        app:cardElevation="@dimen/size_2"
-        app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:padding="@dimen/size_4">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_comment_card"
+            android:layout_width="@dimen/size_15"
+            android:layout_height="@dimen/size_15"
+            android:layout_gravity="center"
+            android:contentDescription="@string/profile_picture"
+            android:scaleType="centerCrop"
+            android:src="@drawable/user"
+            app:civ_border_color="@color/colorPrimary"
+            app:civ_border_width="2dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/name_comment_card"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/size_4">
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:hint="@string/username"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/image_comment_card"
+            app:layout_constraintTop_toTopOf="@+id/image_comment_card" />
 
+        <TextView
+            android:id="@+id/comment_comment_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/comment"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/name_comment_card"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/name_comment_card"
+            app:layout_constraintTop_toBottomOf="@+id/name_comment_card" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image_comment_card"
-                android:layout_width="@dimen/size_15"
-                android:layout_height="@dimen/size_15"
-                android:layout_gravity="center"
-                android:contentDescription="@string/profile_picture"
-                android:scaleType="centerCrop"
-                android:src="@drawable/user"
-                app:civ_border_color="@color/colorPrimary"
-                app:civ_border_width="2dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="@+id/comment_comment_card"
+            app:layout_constraintTop_toBottomOf="@+id/comment_comment_card">
+
+            <ImageView
+                android:id="@+id/comment_upvote_icon"
+                android:layout_width="@dimen/size_12"
+                android:layout_height="@dimen/size_12"
+                android:contentDescription="@string/upvotes"
+                android:padding="@dimen/size_2"
+                android:scaleType="fitCenter"
+                android:src="@drawable/up" />
 
             <TextView
-                android:id="@+id/name_comment_card"
+                android:id="@+id/comment_card_upvotes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="8dp"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:hint="@string/username"
-                android:maxLines="1"
-                android:textColor="@color/black"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/image_comment_card"
-                app:layout_constraintTop_toTopOf="@+id/image_comment_card" />
+                android:padding="@dimen/size_2"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/comment_downvote_icon"
+                android:layout_width="@dimen/size_12"
+                android:layout_height="@dimen/size_12"
+                android:contentDescription="@string/downvotes"
+                android:padding="@dimen/size_2"
+                android:scaleType="fitCenter"
+                android:src="@drawable/down" />
 
             <TextView
-                android:id="@+id/comment_comment_card"
+                android:id="@+id/comment_card_downvotes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/comment"
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="@+id/name_comment_card"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/name_comment_card"
-                app:layout_constraintTop_toBottomOf="@+id/name_comment_card" />
+                android:layout_gravity="center"
+                android:padding="@dimen/size_2"
+                android:textSize="12sp" />
 
-            <LinearLayout
-                android:id="@+id/linearLayout"
+            <ImageView
+                android:id="@+id/comment_card_icon"
+                android:layout_width="@dimen/size_12"
+                android:layout_height="@dimen/size_12"
+                android:layout_marginStart="@dimen/size_4"
+                android:contentDescription="@string/comments"
+                android:padding="@dimen/size_2"
+                android:src="@drawable/comment" />
+
+            <TextView
+                android:id="@+id/comment_card_replies"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintStart_toStartOf="@+id/comment_comment_card"
-                app:layout_constraintTop_toBottomOf="@+id/comment_comment_card">
+                android:layout_gravity="center"
+                android:padding="@dimen/size_2"
+                android:textSize="12sp" />
 
-                <ImageView
-                    android:id="@+id/comment_upvote_icon"
-                    android:layout_width="@dimen/size_12"
-                    android:layout_height="@dimen/size_12"
-                    android:contentDescription="@string/upvotes"
-                    android:padding="@dimen/size_2"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/up" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/comment_card_upvotes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:padding="@dimen/size_2"
-                    android:textSize="16sp" />
+        <LinearLayout
+            android:id="@+id/add_thread"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="@+id/linearLayout"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-                <ImageView
-                    android:id="@+id/comment_downvote_icon"
-                    android:layout_width="@dimen/size_12"
-                    android:layout_height="@dimen/size_12"
-                    android:contentDescription="@string/downvotes"
-                    android:padding="@dimen/size_2"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/down" />
-
-                <TextView
-                    android:id="@+id/comment_card_downvotes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:padding="@dimen/size_2"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:id="@+id/comment_card_icon"
-                    android:layout_width="@dimen/size_12"
-                    android:layout_height="@dimen/size_12"
-                    android:layout_marginStart="@dimen/size_4"
-                    android:contentDescription="@string/comments"
-                    android:padding="@dimen/size_2"
-                    android:src="@drawable/comment" />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/thread_recycler"
+            <EditText
+                android:id="@+id/thread_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@+id/linearLayout"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+                android:autofillHints="description"
+                android:hint="@string/add_reply"
+                android:visibility="gone"
+                android:inputType="textMultiLine|textCapSentences"
+                android:maxLength="1000"
+                android:textSize="12sp" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+            <com.rey.material.widget.Button
+                android:id="@+id/thread_btn"
+                android:layout_width="45dp"
+                android:layout_height="35dp"
+                android:text="@string/add"
+                android:visibility="gone"
+                android:background="@color/black"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/thread_recycler"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/add_thread"
+            app:layout_constraintTop_toBottomOf="@+id/add_thread" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

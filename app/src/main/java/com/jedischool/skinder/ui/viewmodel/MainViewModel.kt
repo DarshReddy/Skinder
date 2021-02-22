@@ -123,6 +123,16 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
         }
     }
 
+    fun addComment(m:Map<String, String>)
+            : LiveData<Resource<MessageResponse>> = liveData(Dispatchers.IO) {
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = mainRepository.addComment(m)))
+        } catch (e:Exception) {
+            emit(Resource.error(data = null, message = e.message ?: "error occurred!"))
+        }
+    }
+
     fun getPostComments(id:String)
             : LiveData<Resource<List<CommentDetail>>> = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
@@ -142,5 +152,4 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
             emit(Resource.error(data = null, message = e.message ?: "error occurred!"))
         }
     }
-
 }

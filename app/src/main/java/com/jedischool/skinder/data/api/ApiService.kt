@@ -53,4 +53,8 @@ interface ApiService {
 
     @GET("comments/{comment_id}/thread")
     suspend fun getThread(@Path("comment_id") id: String): List<CommentDetail>
+
+    @POST("comments/")
+    @FormUrlEncoded
+    suspend fun addComment(@FieldMap params: Map<String, String>): MessageResponse
 }

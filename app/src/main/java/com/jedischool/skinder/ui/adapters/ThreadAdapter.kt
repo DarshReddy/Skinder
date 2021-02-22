@@ -35,9 +35,11 @@ class ThreadAdapter(private val thread: ArrayList<CommentDetail>, private val co
                 when (comment.upordown) {
                     "u" -> {
                         upVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
+                        downVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.black))
                     }
                     "d" -> {
                         downVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
+                        upVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.black))
                     }
                     else -> {
                         downVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.black))

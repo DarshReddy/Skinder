@@ -27,6 +27,8 @@ class TrendingFragment : Fragment(), TrendingAdapter.PostClicked {
 
     private lateinit var trendingAdapter: TrendingAdapter
     private lateinit var posts: ArrayList<PostDetail>
+    private lateinit var trendingRecycler: RecyclerView
+    private lateinit var progressView: ProgressView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,16 +42,52 @@ class TrendingFragment : Fragment(), TrendingAdapter.PostClicked {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val trendingRecycler : RecyclerView = view.findViewById(R.id.recycler_trending)
+        trendingRecycler = view.findViewById(R.id.recycler_trending)
         trendingRecycler.layoutManager = LinearLayoutManager(context)
         trendingAdapter = context?. let { TrendingAdapter(arrayListOf(), it, this) }!!
         trendingRecycler.adapter = trendingAdapter
-        val progressView: ProgressView = view.findViewById(R.id.progress_trending)
+        progressView = view.findViewById(R.id.progress_trending)
+
         val viewModel = ViewModelProvider(
                 this,
                 ViewModelFactory(RetrofitBuilder.apiService)
         ).get(MainViewModel::class.java)
-        viewModel.getTrending().observe(viewLifecycleOwner, Observer {
+        viewModel.getTrending().observe(viewLifecycleOwner,  {
+            it?.let { resource ->
+                when (resource.status) {
+                    Status.SUCCESS -> {
+                        posts = (resource.data as ArrayList<PostDetail>?)!!
+                        if (posts.size==0) Toast.makeText(context, "No posts are trending at this moment! :(",Toast.LENGTH_LONG).show()
+                        trendingAdapter.apply {
+                            addPosts(posts)
+                            notifyDataSetChanged()
+                        }
+                        progressView.visibility = View.GONE
+                        trendingRecycler.visibility = View.VISIBLE
+                    }
+                    Status.ERROR -> {
+                        Toast.makeText(context, resource.message, Toast.LENGTH_SHORT).show()
+                        Log.e("ERR", resource.message.toString())
+                        if(resource.message.toString().contains("401",ignoreCase = true)) {
+                            LoginActivity.refresh()
+                        }
+                    }
+                    Status.LOADING -> {
+                        progressView.visibility = View.VISIBLE
+                        trendingRecycler.visibility = View.GONE
+                    }
+                }
+            }
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val viewModel = ViewModelProvider(
+                this,
+                ViewModelFactory(RetrofitBuilder.apiService)
+        ).get(MainViewModel::class.java)
+        viewModel.getTrending().observe(viewLifecycleOwner,  {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {
@@ -100,7 +138,7 @@ class TrendingFragment : Fragment(), TrendingAdapter.PostClicked {
         params["post_id"] = id
         params["upordown"] = v
 
-        viewModel.votePost(params).observe(viewLifecycleOwner, Observer {
+        viewModel.votePost(params).observe(viewLifecycleOwner,  {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {

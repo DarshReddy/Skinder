@@ -22,7 +22,7 @@ class PostAdapter(private val posts: ArrayList<PostDetail>, private val context:
     }
 
     class DataViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        fun bind(post: PostDetail, postClicked: PostClicked)
+        fun bind(position: Int, post: PostDetail, postClicked: PostClicked)
         {
             itemView.apply {
                 val postTitle : TextView = findViewById(R.id.name_post_card)
@@ -35,7 +35,9 @@ class PostAdapter(private val posts: ArrayList<PostDetail>, private val context:
                 val downVote: ImageView = findViewById(R.id.downvote_icon)
                 val comment: ImageView = findViewById(R.id.comment_icon)
                 val commentNo: TextView = findViewById(R.id.post_card_comments)
+                val username: TextView = findViewById(R.id.post_username)
 
+                username.text = post.name
                 postTitle.text = post.title
                 Glide.with(itemView).load(post.image_link).into(postImage)
                 postEmail.text = post.caption
@@ -44,12 +46,16 @@ class PostAdapter(private val posts: ArrayList<PostDetail>, private val context:
                 postUpVotes.text = post.upvotes.toString()
                 postDownVotes.text = post.downvotes.toString()
 
+                comment.setOnClickListener { postClicked.onPostClicked(position) }
+
                 when (post.upordown) {
                     "u" -> {
                         upVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
+                        downVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.black))
                     }
                     "d" -> {
                         downVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
+                        upVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.black))
                     }
                     else -> {
                         downVote.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.black))
@@ -118,10 +124,7 @@ class PostAdapter(private val posts: ArrayList<PostDetail>, private val context:
     override fun getItemCount(): Int = posts.size
 
     override fun onBindViewHolder(holder: DataViewHolder, position: Int) {
-        holder.bind(posts[position], postClicked)
-        holder.itemView.setOnClickListener {
-            postClicked.onPostClicked(position)
-        }
+        holder.bind(position,posts[position], postClicked)
     }
 
     fun addPosts(posts: List<PostDetail>) {

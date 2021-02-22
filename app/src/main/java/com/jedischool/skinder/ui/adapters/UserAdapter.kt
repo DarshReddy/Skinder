@@ -26,10 +26,10 @@ class UserAdapter(private val users:ArrayList<UserLeaderboard>, private val cont
                 pointsUser.text = "Points: " + user.points
 
                 when {
-                    user.points>40 -> badge.setImageResource(R.drawable.badge5)
-                    user.points>30 -> badge.setImageResource(R.drawable.badge4)
-                    user.points>20 -> badge.setImageResource(R.drawable.badge3)
-                    user.points>10 -> badge.setImageResource(R.drawable.badge2)
+                    user.points>80 -> badge.setImageResource(R.drawable.badge5)
+                    user.points>60 -> badge.setImageResource(R.drawable.badge4)
+                    user.points>40 -> badge.setImageResource(R.drawable.badge3)
+                    user.points>20 -> badge.setImageResource(R.drawable.badge2)
                 }
             }
         }

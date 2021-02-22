@@ -18,15 +18,19 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.Skinder.NoActionBar">
         </activity>
-        <activity android:name=".ui.activities.LoginActivity"/>
+        <activity
+            android:name=".ui.activities.LoginActivity"
+            android:noHistory="true"/>
         <activity
             android:name=".ui.activities.AddPostActivity"
             android:label="@string/add_post"/>
         <activity
             android:name=".ui.activities.PostDetailActivity"
-            android:label="@string/post_detail"/>
-        <activity android:name=".ui.activities.SplashThemeActivity"
-            android:theme="@style/Theme.Skinder.Splash">
+            android:label="@string/comments"/>
+        <activity
+            android:name=".ui.activities.SplashThemeActivity"
+            android:theme="@style/Theme.Skinder.Splash"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

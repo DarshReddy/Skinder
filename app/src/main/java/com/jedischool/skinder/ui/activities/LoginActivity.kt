@@ -56,7 +56,7 @@ class LoginActivity : AppCompatActivity() {
         if (sharedPreferences.getString("token", null)!=null) {
             TOKEN = sharedPreferences.getString("token",null)
             refreshToken()
-            Log.d("TOKEN",LoginActivity.TOKEN!!)
+            Log.d("TOKEN",TOKEN!!)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
@@ -65,7 +65,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun refreshToken() {
-        viewModel.refreshToken().observe(this, Observer {
+        viewModel.refreshToken().observe(this,  {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {
@@ -85,7 +85,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun btnClicked(googleClient: GoogleSignInClient) {
-        transitionButton.startAnimation();
+        transitionButton.startAnimation()
         val signInIntent = googleClient.signInIntent
         startActivityForResult(signInIntent, 1)
     }
@@ -115,12 +115,12 @@ class LoginActivity : AppCompatActivity() {
     private fun loggedIn(token: String) {
         val params: MutableMap<String, String> = HashMap()
         params["idtoken"] = token
-        viewModel.getToken(params).observe(this, Observer {
+        viewModel.getToken(params).observe(this,  {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {
                         resource.data?.let { response -> setUser(response) }
-                        Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                     }
@@ -140,6 +140,6 @@ class LoginActivity : AppCompatActivity() {
         editor.commit()
         TOKEN = response.accessToken
         Log.d("TOKEN NEW",response.accessToken)
-        Toast.makeText(this, response.name, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this,"Welcome " + response.name, Toast.LENGTH_SHORT).show()
     }
 }

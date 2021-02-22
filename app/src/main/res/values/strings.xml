@@ -29,7 +29,10 @@
     <string name="author">Author</string>
     <string name="sign_in">Sign In</string>
     <string name="capture">Capture</string>
-    <string name="post_detail">Post Detail</string>
     <string name="popular_posts">Popular Posts</string>
     <string name="comment">Comment</string>
+    <string name="view_replies">View Replies</string>
+    <string name="add_comment">Add Comment</string>
+    <string name="add">Add</string>
+    <string name="add_reply">Add Reply</string>
 </resources>

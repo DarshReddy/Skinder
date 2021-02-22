@@ -53,7 +53,7 @@ class ProfileFragment : Fragment() {
                 this,
                 ViewModelFactory(RetrofitBuilder.apiService)
         ).get(MainViewModel::class.java)
-        viewModel.getProfile().observe(viewLifecycleOwner, Observer {
+        viewModel.getProfile().observe(viewLifecycleOwner,  {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {
@@ -80,9 +80,9 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setBadges(points: Int) {
-        if(points>40) badge5.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
-        if(points>30) badge4.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
-        if(points>20) badge3.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
-        if(points>10) badge2.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
+        if(points>80) badge5.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
+        if(points>60) badge4.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
+        if(points>40) badge3.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
+        if(points>20) badge2.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimary))
     }
 }

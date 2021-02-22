@@ -27,6 +27,8 @@ class PopularFragment: Fragment(), PostAdapter.PostClicked {
 
     private lateinit var postAdapter: PostAdapter
     private lateinit var posts: ArrayList<PostDetail>
+    private lateinit var popularRecycler: RecyclerView
+    private lateinit var progressView: ProgressView
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -40,16 +42,17 @@ class PopularFragment: Fragment(), PostAdapter.PostClicked {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val trendingRecycler : RecyclerView = view.findViewById(R.id.recycler_popular)
-        trendingRecycler.layoutManager = LinearLayoutManager(context)
+        popularRecycler = view.findViewById(R.id.recycler_popular)
+        popularRecycler.layoutManager = LinearLayoutManager(context)
         postAdapter = context?.let {  PostAdapter(arrayListOf(), it, this) }!!
-        trendingRecycler.adapter = postAdapter
-        val progressView: ProgressView = view.findViewById(R.id.progress_popular)
+        popularRecycler.adapter = postAdapter
+        progressView = view.findViewById(R.id.progress_popular)
+
         val viewModel = ViewModelProvider(
                 this,
                 ViewModelFactory(RetrofitBuilder.apiService)
         ).get(MainViewModel::class.java)
-        viewModel.getPopular().observe(viewLifecycleOwner, Observer {
+        viewModel.getPopular().observe(viewLifecycleOwner,  {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {
@@ -59,7 +62,7 @@ class PopularFragment: Fragment(), PostAdapter.PostClicked {
                             notifyDataSetChanged()
                         }
                         progressView.visibility = View.GONE
-                        trendingRecycler.visibility = View.VISIBLE
+                        popularRecycler.visibility = View.VISIBLE
                     }
                     Status.ERROR -> {
                         Toast.makeText(context, resource.message, Toast.LENGTH_SHORT).show()
@@ -70,7 +73,41 @@ class PopularFragment: Fragment(), PostAdapter.PostClicked {
                     }
                     Status.LOADING -> {
                         progressView.visibility = View.VISIBLE
-                        trendingRecycler.visibility = View.GONE
+                        popularRecycler.visibility = View.GONE
+                    }
+                }
+            }
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val viewModel = ViewModelProvider(
+                this,
+                ViewModelFactory(RetrofitBuilder.apiService)
+        ).get(MainViewModel::class.java)
+        viewModel.getPopular().observe(viewLifecycleOwner,  {
+            it?.let { resource ->
+                when (resource.status) {
+                    Status.SUCCESS -> {
+                        posts = (resource.data as ArrayList<PostDetail>?)!!
+                        postAdapter.apply {
+                            addPosts(posts)
+                            notifyDataSetChanged()
+                        }
+                        progressView.visibility = View.GONE
+                        popularRecycler.visibility = View.VISIBLE
+                    }
+                    Status.ERROR -> {
+                        Toast.makeText(context, resource.message, Toast.LENGTH_SHORT).show()
+                        Log.e("ERR", resource.message.toString())
+                        if(resource.message.toString().contains("401",ignoreCase = true)) {
+                            LoginActivity.refresh()
+                        }
+                    }
+                    Status.LOADING -> {
+                        progressView.visibility = View.VISIBLE
+                        popularRecycler.visibility = View.GONE
                     }
                 }
             }
@@ -100,7 +137,7 @@ class PopularFragment: Fragment(), PostAdapter.PostClicked {
         params["post_id"] = id
         params["upordown"] = v
 
-        viewModel.votePost(params).observe(viewLifecycleOwner, Observer {
+        viewModel.votePost(params).observe(viewLifecycleOwner,  {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {

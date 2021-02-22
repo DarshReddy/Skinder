@@ -47,7 +47,7 @@ class PostsFragment : Fragment(), PostAdapter.PostClicked {
                 this,
                 ViewModelFactory(RetrofitBuilder.apiService)
         ).get(MainViewModel::class.java)
-        viewModel.getMyPosts().observe(viewLifecycleOwner, Observer {
+        viewModel.getMyPosts().observe(viewLifecycleOwner,  {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {
@@ -80,10 +80,14 @@ class PostsFragment : Fragment(), PostAdapter.PostClicked {
 
     override fun onPostClicked(pos: Int) {
         val intent = Intent(context, PostDetailActivity::class.java)
+        intent.putExtra("id",posts[pos].post_id)
         intent.putExtra("title",posts[pos].title)
         intent.putExtra("image",posts[pos].image_link)
         intent.putExtra("caption",posts[pos].caption)
         intent.putExtra("author",posts[pos].user_image)
+        intent.putExtra("up",posts[pos].upvotes)
+        intent.putExtra("down",posts[pos].downvotes)
+        intent.putExtra("uord",posts[pos].upordown)
         startActivity(intent)
     }
 
@@ -97,7 +101,7 @@ class PostsFragment : Fragment(), PostAdapter.PostClicked {
         params["post_id"] = id
         params["upordown"] = v
 
-        viewModel.votePost(params).observe(viewLifecycleOwner, Observer {
+        viewModel.votePost(params).observe(viewLifecycleOwner,  {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {
@@ -107,7 +111,8 @@ class PostsFragment : Fragment(), PostAdapter.PostClicked {
                         Toast.makeText(context, resource.message, Toast.LENGTH_SHORT).show()
                         Log.e("ERR", resource.message.toString())
                         if(resource.message.toString().contains("401",ignoreCase = true)) {
-
+                            val intent = Intent(context, LoginActivity::class.java)
+                            startActivity(intent)
                         }
                     }
                     Status.LOADING -> {

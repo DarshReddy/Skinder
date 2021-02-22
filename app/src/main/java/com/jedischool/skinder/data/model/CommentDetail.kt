@@ -11,5 +11,6 @@ data class CommentDetail(
         val timeCommented : String,
         var upordown : String,
         val name : String,
-        val user_image : String
+        val user_image : String,
+        var noofthreads: Int
 )
